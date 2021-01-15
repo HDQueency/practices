@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>understanding-of-father-son-transmit</title>
+</head>
+<body>
+	<div id="app">
+		<cpn :cnum1="fnum1" :cnum2="fnum2" @finput1='fhandle1' @finput2='fhandle2'></cpn>
+
+	</div>
+
+	<template id='icpn'>
+		<div>
+			<h2>我是子组件的cpn</h2>
+			<p>子组件接收的数据：{{cnum1}}</p>
+			<p>子组件转化过的数据：{{updatenum1}}</p>
+			<!-- 需求是当子组件输入框的值变化的时候，修改vue实例里的num值 -->
+			<input type="number" name="" :value="updatenum1"  @input='inputshi1'>
+			<p>子组件接收的数据：{{cnum2}}</p>
+			<p>子组件转化过的数据：{{updatenum2}}</p>
+			<input type="number" name="" :value='updatenum2' @input="inputshi2">
+		</div>
+	</template>
+
+	<script type="text/javascript" src="vue.js"></script>
+
+	<script type="text/javascript">
+		//子组件：
+		const cpn = {
+			template:"#icpn",
+			props:{
+				cnum1:Number,
+				cnum2:Number
+			},//这两个值本质是接收父传过来的值，所以要想改变这两个值，必须去改变父的值；
+			data(){
+				return{
+					updatenum1:this.cnum1,
+					updatenum2:this.cnum2
+				}
+			},
+			methods:{
+				inputshi1(event){
+					this.updatenum1=event.target.value;
+					this.updatenum2=this.updatenum1*100;
+					this.$emit('finput1',this.updatenum1);//注意这里可以将this.updatenum1发出去；
+					this.$emit('finput2',this.updatenum2)
+				},
+				inputshi2(event){
+					this.updatenum2=event.target.value;
+					this.updatenum1=this.updatenum2 / 100;
+					this.$emit('finput2',this.updatenum2);
+					this.$emit('finput1',this.updatenum1)//当你更改了1的值时，要发出1改变了的事件；
+				}
+			}
+
+		}
+	
+		
+		//父组件：
+		const app = new Vue({
+			el:"#app",
+			data:{
+				message:"我是vue实例里的信息",
+				firstname:"h",
+				lastname:"d",
+				books:['system','computer','pc'],
+				fnum1:1,
+				fnum2:2
+			},
+			computed:{
+				fullname:function(){
+					return this.firstname + this.lastname
+				}
+			},
+			methods:{
+				getFullname(){
+					return this.firstname + this.lastname
+				},
+				fhandle1(value){
+					this.fnum1=parseFloat(value);
+				},
+				fhandle2(value){
+					this.fnum2=parseFloat(value)
+				}
+			},
+			components:{
+				cpn
+			}
+		})
+	</script>
+</body>
+</html>

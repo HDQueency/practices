@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>father-son-mutual-usage</title>
+</head>
+<body>
+	<div id="app">
+		<cpn></cpn>
+		<cpn></cpn>
+		<cpn ref="third"></cpn>
+		<button @click="buttonclick">我是爹</button>
+	</div>
+
+	<template id='icpn'>
+		<div>
+			<h2>我是子组件的标题</h2>
+			<p>我是子组件的内容</p>
+			<button @click='showmessage'>我是子</button>
+		</div>
+	</template>
+
+	<script type="text/javascript" src="vue.js"></script>
+
+	<script type="text/javascript">
+		//子组件：
+		const cpn = {
+			template:"#icpn",
+			methods:{
+				showmessage(){
+					console.log(this.$parent);
+					console.log(this.$parent.message);
+					console.log(this.$parent.getFullname());
+				}
+			}
+			}
+		
+		//父组件：
+		const app = new Vue({
+			el:"#app",
+			data:{
+				message:"我是vue实例里的信息",
+				firstname:"h",
+				lastname:"d",
+				books:['system','computer','pc']
+			},
+			computed:{
+				fullname:function(){
+					return this.firstname + this.lastname
+				}
+			},
+			methods:{
+				getFullname(){
+					return this.firstname + this.lastname
+				},
+				buttonclick(){
+					console.log(this.$refs.third);
+				}
+			},
+			components:{
+				cpn
+			}
+		})
+	</script>
+</body>
+</html>

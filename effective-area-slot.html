@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>effective-area-slot</title>
+</head>
+<body>
+	<div id="app">
+		<cpn>
+			<!-- 使用插槽 -->
+			<template slot-scope="use">
+				<li v-for="item in use.fuse">{{item}}</li>
+			</template>
+			<!-- 高版本不需要使用template,其他的标签也可以 -->
+			<ul slot-scope="use">
+				<li v-for="item in use.fuse">{{item}}</li>
+			</ul>
+		</cpn>
+	</div>
+
+	<template id='icpn'>
+		<div>
+			<h2>我是子组件</h2>
+			<slot :fuse="cmessage"></slot>
+			<slot :fuse="cmessage"></slot>
+		</div>
+	</template>
+
+	<script type="text/javascript" src="vue.js"></script>
+
+	<script type="text/javascript">
+		//子组件：
+		const cpn = {
+			template:"#icpn",
+			data(){
+				return{
+					cmessage:['我是子里的信息','如何才能使用我呢']
+				}
+			}
+			}
+		
+		//父组件：
+		const app = new Vue({
+			el:"#app",
+			data:{
+				message:"我是vue实例里的信息",
+				firstname:"h",
+				lastname:"d",
+				books:['system','computer','pc']
+			},
+			computed:{
+				fullname:function(){
+					return this.firstname + this.lastname
+				}
+			},
+			methods:{
+				getFullname(){
+					return this.firstname + this.lastname
+				}
+			},
+			components:{
+				cpn
+			}
+		})
+	</script>
+</body>
+</html>

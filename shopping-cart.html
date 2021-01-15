@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>shopping-cart</title>
+</head>
+<body>
+	<div id="app">
+		<div v-if='books.length'>
+			<table>
+				<thead>
+					<tr>
+						<td></td>
+						<td>书名</td>
+						<td>出版日期</td>
+						<td>价格</td>
+						<td>数量</td>
+						<td>移除</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(item,index) in books">
+						<!-- 拿到一行的数据 -->
+						<!-- 因为有两个数据需要自定义，所以这里不再循环取出对象内的内容
+							<td v-for='value in item'></td>
+						-->
+						<td>{{item.id}}</td>
+						<td>{{item.name}}</td>
+						<td>{{item.date}}</td>
+						<td>{{finalprice(item.price)}}</td>
+						<!-- 过滤器的用法 -->
+						<!-- <td>{{item.price|finalprice}}</td> -->
+						<td>
+							<button @click='increment(index)'>+</button>
+							{{item.count}}
+							<button @click='decrement(index)' :disabled='item.count<=1'>-</button>
+						</td>
+						<td><button @click='remove(index)'>移除</button></td>
+					</tr>
+				</tbody>
+			</table>
+			<p>总价格：{{finalprice(totalprice)}}</p>
+		</div>
+		<p v-else>购物车为空</p>
+	</div>
+
+
+
+	<script type="text/javascript" src="vue.js"></script>
+
+	<script type="text/javascript">
+		const app = new Vue({
+			el:"#app",
+			data:{
+				books:[
+				{
+					id:1,
+					name:'算法导论',
+					date:'2006-6',
+					price:78,
+					count:1
+				},
+				{
+					id:2,
+					name:'深入理解计算机原理',
+					date:'2009-10',
+					price:134,
+					count:1
+				},
+				{
+					id:3,
+					name:'代码大全',
+					date:'2010-6',
+					price:83,
+					count:1
+				},
+				{
+					id:4,
+					name:'unix编程原理',
+					date:'2020-3',
+					price:49,
+					count:1
+				}
+				]
+			},
+			computed:{
+				totalprice:function(){
+					let totalprice = 0;
+					for(let i=0;i<this.books.length;i++){
+						totalprice += this.books[i].price * this.books[i].count;
+						//这次的错误是将return totalprice写入for循环内部了
+					}
+					return totalprice;
+				}
+			},
+			methods:{
+				finalprice(price){
+					return '¥'+price.toFixed(2);
+				},
+				increment(index){
+					//点击加号按钮并不是所有的书籍数量都增加，所以要获得当前数量增加书籍的index;下面同理；
+					this.books[index].count++;
+				},
+				decrement(index){
+					//减号不能减到负数；
+					this.books[index].count--;
+				},
+				remove(index){
+					this.books.splice('index',1);
+				}
+			},
+			// filters:{
+			// 	finalprice(price){
+			// 		return '¥'+price.toFixed(2);
+			// 	}
+			// }
+			
+		})
+	</script>
+</body>
+</html>

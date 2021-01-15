@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>slot</title>
+</head>
+<body>
+	<div id="app">
+		<cpn></cpn>
+		<cpn>
+			<button>我是特色的东西</button>
+			<!-- 如果你的插槽都有名，但是你替换的时候没有指定，他就会谁都替换不了，如果有几个没名的，他就会都替换 -->
+		</cpn>
+		<cpn>
+			<h3 slot='center'>我要替换中间的插槽</h3>
+			<h4 slot="right">我要替换右边的插槽</h4>
+		</cpn>
+	</div>
+
+	<template id='icpn'>
+		<div>
+			<h2>我是组件里共用的部分</h2>
+			<slot></slot>
+			<slot></slot>
+			<slot name="left">
+				<ul>
+					<li>slot里面不写东西就后面自己写填充</li>
+					<li>如果写了东西，就是你不写我默认填充这个</li>
+				</ul>
+			</slot>
+			<slot name='center'>
+				<p>如果插槽比较多，怎么知道替换哪个呢，所以要用具名插槽</p>
+			</slot>
+			<slot name='right'></slot>
+		</div>
+	</template>
+
+	<script type="text/javascript" src="vue.js"></script>
+
+	<script type="text/javascript">
+		//子组件：
+		const cpn = {
+			template:"#icpn"
+			}
+		
+		//父组件：
+		const app = new Vue({
+			el:"#app",
+			data:{
+				message:"我是vue实例里的信息",
+				firstname:"h",
+				lastname:"d",
+				books:['system','computer','pc']
+			},
+			computed:{
+				fullname:function(){
+					return this.firstname + this.lastname
+				}
+			},
+			methods:{
+				getFullname(){
+					return this.firstname + this.lastname
+				}
+			},
+			components:{
+				cpn
+			}
+		})
+	</script>
+</body>
+</html>
